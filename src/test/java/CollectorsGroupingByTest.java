@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.hasSize;
  */
 public class CollectorsGroupingByTest {
     @Test
-    public void classifier() {
+    public void defaultCollecting() {
         var p1 = Person.builder()
                 .id(1)
                 .name("name")
@@ -34,7 +34,7 @@ public class CollectorsGroupingByTest {
     }
 
     @Test
-    public void classifier_downstream() {
+    public void changeTypeOfAnAggregate() {
         var p1 = Person.builder()
                 .id(1)
                 .name("name")
@@ -52,7 +52,26 @@ public class CollectorsGroupingByTest {
     }
 
     @Test
-    public void classifier_supplier_downstream() {
+    public void changeElementTypeOfAnAggregate() {
+        var p1 = Person.builder()
+                .id(1)
+                .name("name")
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .name("name")
+                .build();
+
+        Map<String, List<Integer>> collect = Stream.of(p1, p2)
+                .collect(Collectors.groupingBy(Person::getName, 
+                        Collectors.mapping(Person::getAge, Collectors.toList())));
+
+        assertThat(collect.size(), is(1));
+        assertThat(collect.get("name"), hasSize(2));
+    }
+
+    @Test
+    public void specificImplementationOfMap() {
         var p1 = Person.builder()
                 .id(1)
                 .name("name")
