@@ -39,3 +39,58 @@ public static <T, U, A, R>
     flatMapping(Function<? super T, ? extends Stream<? extends U>> mapper,
                 Collector<? super U, A, R> downstream)
 ```
+
+# project description
+* Entity
+    ```
+    @Value
+    @Builder
+    class Person {
+        int id;
+        String name;
+        int age;
+        
+        boolean isOlderThan(int value) {
+            return age > value;
+        }
+    }
+    ```
+* we want to perform grouping:
+    * `Map<String, List<Person>>`: persons grouped by name (to list)
+        ```
+        stream.collect(groupingBy(Person::getName));        
+        ```
+    * `Map<String, Set<Person>>`: persons grouped by name (to set)
+        ```
+        stream.collect(groupingBy(Person::getName, toSet()));
+        ```
+    * `Map<String, List<Integer>>`: age of persons grouped by name 
+    (to list)
+        ```
+        stream.collect(Collectors.groupingBy(Person::getName, Collectors.mapping(Person::getAge, Collectors.toList())));        
+        ```
+    * `TreeMap<String, Set<Person>>`: persons grouped by name 
+    (to list) in a tree map with reversed order
+        ```
+        stream.collect(groupingBy(Person::getName, () -> new TreeMap<>(Comparator.reverseOrder()), toSet()));        
+        ```
+    * `Map<String, List<Person>>`: persons grouped by name and filtered by age > 30
+        ```
+        stream.collect(groupingBy(Person::getName, filtering(person -> person.isOlderThan(30), toList())));
+        ```
+        _Remark_: difference to filter on stream
+    * `Map<String, Optional<Integer>>`: group persons by name and find max age for every group
+        ```
+        stream.collect(groupingBy(Person::getName, mapping(Person::getAge, maxBy(Comparator.comparingInt(Integer::intValue)))));
+        ```
+    * `Map<String, Optional<Integer>>`: group persons by name and find max age for every group 
+    (if there is no max value -> put `-1`)
+        ```
+        stream.collect(groupingBy(Person::getName,
+                                mapping(Person::getAge,
+                                        collectingAndThen(
+                                                maxBy(Comparator.comparingInt(Integer::intValue)),
+                                                optional -> optional.orElse(-1)
+                                        )
+                                )));
+        ```
