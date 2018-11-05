@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -25,7 +26,7 @@ public class CollectorsGroupingByTest {
                 .build();
 
         Map<String, List<Person>> collect = Stream.of(p1, p2)
-                .collect(Collectors.groupingBy(Person::getName));
+                .collect(groupingBy(Person::getName));
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
     }
@@ -42,7 +43,7 @@ public class CollectorsGroupingByTest {
                 .build();
 
         Map<String, Set<Person>> collect = Stream.of(p1, p2)
-                .collect(Collectors.groupingBy(Person::getName, Collectors.toSet()));
+                .collect(groupingBy(Person::getName, toSet()));
 
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
@@ -79,7 +80,7 @@ public class CollectorsGroupingByTest {
                 .build();
 
         TreeMap<String, Set<Person>> collect = Stream.of(p1, p2)
-                .collect(Collectors.groupingBy(Person::getName, TreeMap::new, Collectors.toSet()));
+                .collect(groupingBy(Person::getName, TreeMap::new, toSet()));
 
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
@@ -105,7 +106,7 @@ public class CollectorsGroupingByTest {
 
         Map<String, List<Person>> collect = Stream.of(p1, p2, p3)
                 .filter(person -> person.isOlderThan(30))
-                .collect(Collectors.groupingBy(Person::getName));
+                .collect(groupingBy(Person::getName));
 
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(1));
@@ -130,11 +131,53 @@ public class CollectorsGroupingByTest {
                 .build();
 
         Map<String, List<Person>> collect = Stream.of(p1, p2, p3)
-                .collect(Collectors.groupingBy(Person::getName,
-                        Collectors.filtering(person -> person.isOlderThan(30), Collectors.toList())));
+                .collect(groupingBy(Person::getName,
+                        filtering(person -> person.isOlderThan(30), toList())));
 
         assertThat(collect.size(), is(2));
         assertThat(collect.get("name"), hasSize(1));
         assertThat(collect.get("name3"), is(empty()));
+    }
+
+    @Test
+    public void find_max_age_for_every_group() {
+        var p1 = Person.builder()
+                .id(1)
+                .name("name")
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .name("name")
+                .build();
+
+        Map<String, Optional<Integer>> collect = Stream.of(p1, p2)
+                .collect(groupingBy(Person::getName,
+                        mapping(Person::getAge, maxBy(Comparator.comparingInt(x -> x))
+                        )));
+
+        assertThat(collect.size(), is(1));
+    }
+
+    @Test
+    public void find_max_age_orDefault_for_every_group() {
+        var p1 = Person.builder()
+                .id(1)
+                .name("name")
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .name("name")
+                .build();
+
+        Map<String, Integer> collect = Stream.of(p1, p2)
+                .collect(groupingBy(Person::getName,
+                        mapping(Person::getAge,
+                                collectingAndThen(
+                                        maxBy(Comparator.comparingInt(x -> x)),
+                                        x -> x.orElse(-1)
+                                )
+                        )));
+
+        assertThat(collect.size(), is(1));
     }
 }
