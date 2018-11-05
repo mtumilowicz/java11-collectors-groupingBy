@@ -152,7 +152,7 @@ public class CollectorsGroupingByTest {
 
         Map<String, Optional<Integer>> collect = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getName,
-                        mapping(Person::getAge, maxBy(Comparator.comparingInt(x -> x))
+                        mapping(Person::getAge, maxBy(Comparator.comparingInt(Integer::intValue))
                         )));
 
         assertThat(collect.size(), is(1));
@@ -173,8 +173,8 @@ public class CollectorsGroupingByTest {
                 .collect(groupingBy(Person::getName,
                         mapping(Person::getAge,
                                 collectingAndThen(
-                                        maxBy(Comparator.comparingInt(x -> x)),
-                                        x -> x.orElse(-1)
+                                        maxBy(Comparator.comparingInt(Integer::intValue)),
+                                        optional -> optional.orElse(-1)
                                 )
                         )));
 
