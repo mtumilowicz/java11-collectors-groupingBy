@@ -1,7 +1,6 @@
 import org.junit.Test;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -14,6 +13,7 @@ import static org.hamcrest.Matchers.hasSize;
  * Created by mtumilowicz on 2018-11-05.
  */
 public class CollectorsGroupingByTest {
+
     @Test
     public void defaultCollecting() {
         var p1 = Person.builder()
@@ -27,6 +27,7 @@ public class CollectorsGroupingByTest {
 
         Map<String, List<Person>> collect = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getName));
+
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
     }
@@ -61,8 +62,8 @@ public class CollectorsGroupingByTest {
                 .build();
 
         Map<String, List<Integer>> collect = Stream.of(p1, p2)
-                .collect(Collectors.groupingBy(Person::getName,
-                        Collectors.mapping(Person::getAge, Collectors.toList())));
+                .collect(groupingBy(Person::getName,
+                        mapping(Person::getAge, toList())));
 
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
@@ -80,7 +81,7 @@ public class CollectorsGroupingByTest {
                 .build();
 
         TreeMap<String, Set<Person>> collect = Stream.of(p1, p2)
-                .collect(groupingBy(Person::getName, TreeMap::new, toSet()));
+                .collect(groupingBy(Person::getName, () -> new TreeMap<>(Comparator.reverseOrder()), toSet()));
 
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
