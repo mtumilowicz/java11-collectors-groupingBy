@@ -1,9 +1,6 @@
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,7 +43,7 @@ public class CollectorsGroupingByTest {
 
         Map<String, Set<Person>> collect = Stream.of(p1, p2)
                 .collect(Collectors.groupingBy(Person::getName, Collectors.toSet()));
-        
+
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
     }
@@ -63,7 +60,7 @@ public class CollectorsGroupingByTest {
                 .build();
 
         Map<String, List<Integer>> collect = Stream.of(p1, p2)
-                .collect(Collectors.groupingBy(Person::getName, 
+                .collect(Collectors.groupingBy(Person::getName,
                         Collectors.mapping(Person::getAge, Collectors.toList())));
 
         assertThat(collect.size(), is(1));
@@ -83,7 +80,7 @@ public class CollectorsGroupingByTest {
 
         TreeMap<String, Set<Person>> collect = Stream.of(p1, p2)
                 .collect(Collectors.groupingBy(Person::getName, TreeMap::new, Collectors.toSet()));
-        
+
         assertThat(collect.size(), is(1));
         assertThat(collect.get("name"), hasSize(2));
     }
@@ -133,9 +130,9 @@ public class CollectorsGroupingByTest {
                 .build();
 
         Map<String, List<Person>> collect = Stream.of(p1, p2, p3)
-                .collect(Collectors.groupingBy(Person::getName, 
+                .collect(Collectors.groupingBy(Person::getName,
                         Collectors.filtering(person -> person.isOlderThan(30), Collectors.toList())));
-        
+
         assertThat(collect.size(), is(2));
         assertThat(collect.get("name"), hasSize(1));
         assertThat(collect.get("name3"), is(empty()));
