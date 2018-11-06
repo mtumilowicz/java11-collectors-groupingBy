@@ -8,7 +8,7 @@ import lombok.Value;
 @Builder
 class Person {
     int id;
-    String name;
+    String jobTitle;
     int age;
     Integer salary;
     
