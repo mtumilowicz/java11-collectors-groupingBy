@@ -1,5 +1,5 @@
 # java11-collectors-groupingBy
-Summary of Collectors.groupingBy API.
+Summary of `Collectors.groupingBy` API.
 
 _Reference_: Java8 - https://www.baeldung.com/java-groupingby-collector  
 _Reference_: Java9 - https://www.baeldung.com/java9-stream-collectors  
@@ -116,9 +116,9 @@ public static <T, U, A, R>
         ```
         stream.collect(groupingBy(Person::getName, mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue)))));
         ```
-        **Remark**:
+        **Remark** - using maxBy + comparator is not sufficient:
         ```
-        Map<String, Optional<Person>> collect = Stream.of(p1, p2, p3)
+        Map<String, Optional<Person>> collect = stream
                 .collect(groupingBy(Person::getName, maxBy(Comparator.comparingInt(Person::getSalary))));        
         ```
     * `Map<String, Integer>`: group persons by name and find max age for every group 
