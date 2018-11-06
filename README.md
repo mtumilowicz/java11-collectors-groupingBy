@@ -109,7 +109,12 @@ public static <T, U, A, R>
         ```
         stream.collect(groupingBy(Person::getName, mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue)))));
         ```
-    * `Map<String, Optional<Integer>>`: group persons by name and find max age for every group 
+        **Remark**:
+        ```
+        Map<String, Optional<Person>> collect = Stream.of(p1, p2, p3)
+                .collect(groupingBy(Person::getName, maxBy(Comparator.comparingInt(Person::getSalary))));        
+        ```
+    * `Map<String, Integer>`: group persons by name and find max age for every group 
     (if there is no max value -> put `-1`)
         ```
         stream.collect(groupingBy(Person::getName,
