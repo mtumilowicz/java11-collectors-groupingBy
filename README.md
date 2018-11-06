@@ -29,11 +29,18 @@ where:
 * **classifier** - a classifier function mapping input elements to keys
 * **downstream** - a `Collector` implementing the downstream reduction,
 for example:
-    * 
+    * `Collectors.averagingInt(ToIntFunction<? super T> mapper)`
+    * `Collectors.summingInt(ToIntFunction<? super T> mapper)`
+    * `Collectors.toList()`
+    * `Collectors.toSet()`
+    * `Collectors.mapping(Function<? super T, ? extends U> mapper, Collector<? super U, A, R> downstream)`
+    * `Collectors.collectingAndThen(Collector<T,A,R> downstream, Function<R,RR> finisher)` - please refer my other
+    github project: [Collectors.collectingAndThen](https://github.com/mtumilowicz/java11-collectors-collectingAndThen)
 * **mapFactory** - a supplier providing a new empty `Map` into which the 
 results will be inserted
 
 ## java 9
+In java 9 we have two more collectors:
 ```
 public static <T, A, R>
     Collector<T, ?, R> 
@@ -86,7 +93,17 @@ public static <T, U, A, R>
         ```
         stream.collect(groupingBy(Person::getName, filtering(person -> person.isOlderThan(30), toList())));
         ```
-        _Remark_: difference to filter on stream
+        * if we `filter` stream before collection we **lose irretrievably** 
+        entries
+        * if we `filter` stream after collection we have keys with empty values
+    * `Map<String, Long>`: group by name and count every group
+        ```
+        stream.collect(groupingBy(Person::getName, counting()));
+        ```
+    * `Map<String, Double>`: group by name and count average salary for every group
+        ```
+        stream.collect(groupingBy(Person::getName, averagingInt(Person::getSalary)));
+        ```
     * `Map<String, Optional<Integer>>`: group persons by name and find max salary for every group
         ```
         stream.collect(groupingBy(Person::getName, mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue)))));
