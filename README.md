@@ -149,6 +149,6 @@ public static <T, U, A, R>
     * `Map<String, Optional<String>>`: find all hobbies for jobTitle and concat them separated by comma
         ```
         stream.collect(groupingBy(Person::getJobTitle,
-                                Collectors.flatMapping(Person::getHobbiesAsStream,
-                                        reducing((x, y) -> x + "," + y))));
+                                      Collectors.flatMapping(Person::getHobbiesAsStream,
+                                              joining(","))));
         ```

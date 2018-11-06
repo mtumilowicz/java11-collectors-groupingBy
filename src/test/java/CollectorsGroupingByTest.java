@@ -336,15 +336,15 @@ public class CollectorsGroupingByTest {
                 .hobbies(Arrays.asList("RPG", "comics"))
                 .build();
 
-        Map<String, Optional<String>> jobTitleHobbiesMap = Stream.of(p1, p2, p3)
+        Map<String, String> jobTitleHobbiesMap = Stream.of(p1, p2, p3)
                 .collect(groupingBy(Person::getJobTitle,
                         Collectors.flatMapping(Person::getHobbiesAsStream,
-                                reducing((x, y) -> x + "," + y))));
+                                joining(","))));
 
         assertThat(jobTitleHobbiesMap.size(), is(2));
 
-        assertThat(jobTitleHobbiesMap.get("manager").orElseThrow(), is("skiing,football,music,films"));
+        assertThat(jobTitleHobbiesMap.get("manager"), is("skiing,football,music,films"));
 
-        assertThat(jobTitleHobbiesMap.get("developer").orElseThrow(), is("RPG,comics"));
+        assertThat(jobTitleHobbiesMap.get("developer"), is("RPG,comics"));
     }
 }
