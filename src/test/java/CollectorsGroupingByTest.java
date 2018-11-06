@@ -118,6 +118,40 @@ public class CollectorsGroupingByTest {
         assertThat(namePersonMap.size(), is(1));
         assertThat(namePersonMap.get("name"), is(2L));
     }
+    
+    @Test
+    public void groupByName_groupByAge_countEveryGroup() {
+        var p1 = Person.builder()
+                .id(1)
+                .name("name")
+                .age(10)
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .name("name")
+                .age(10)
+                .build();
+        var p3 = Person.builder()
+                .id(3)
+                .name("name")
+                .age(15)
+                .build();
+        var p4 = Person.builder()
+                .id(4)
+                .name("name4")
+                .age(20)
+                .build();
+
+        Map<String, Map<Integer, Long>> namePersonMap = Stream.of(p1, p2, p3, p4)
+                .collect(groupingBy(Person::getName, groupingBy(Person::getAge, counting())));
+
+        assertThat(namePersonMap.size(), is(2));
+        
+        assertThat(namePersonMap.get("name").get(10), is(2L));
+        assertThat(namePersonMap.get("name").get(15), is(1L));
+        
+        assertThat(namePersonMap.get("name4").get(20), is(1L));
+    }
 
     @Test
     public void groupByName_averageSalary() {
