@@ -93,6 +93,7 @@ public static <T, U, A, R>
         ```
         stream.collect(groupingBy(Person::getName, filtering(person -> person.isOlderThan(30), toList())));
         ```
+        **Remark**:
         * if we `filter` stream before collection we **lose irretrievably** 
         entries
         * if we `filter` stream after collection we have keys with empty values
