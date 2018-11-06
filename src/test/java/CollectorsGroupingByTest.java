@@ -303,10 +303,6 @@ public class CollectorsGroupingByTest {
                 .hobbies(Arrays.asList("RPG", "comics"))
                 .build();
 
-        Map<String, List<List<String>>> map = Stream.of(p1, p2, p3)
-                .collect(groupingBy(Person::getJobTitle,
-                        Collectors.mapping(Person::getHobbies, toList())));
-
         Map<String, List<String>> jobTitleHobbiesMap = Stream.of(p1, p2, p3)
                 .collect(groupingBy(Person::getJobTitle,
                         Collectors.flatMapping(Person::getHobbiesAsStream, toList())));
