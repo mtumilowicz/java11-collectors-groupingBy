@@ -82,7 +82,7 @@ public static <T, U, A, R>
     * `Map<String, List<Integer>>`: age of persons grouped by name 
     (to list)
         ```
-        stream.collect(Collectors.groupingBy(Person::getName, Collectors.mapping(Person::getAge, Collectors.toList())));        
+        stream.collect(groupingBy(Person::getName, mapping(Person::getAge, toList())));        
         ```
     * `TreeMap<String, Set<Person>>`: persons grouped by name 
     (to list) in a tree map with reversed order
