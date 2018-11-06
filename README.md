@@ -34,8 +34,11 @@ for example:
     * `Collectors.toList()`
     * `Collectors.toSet()`
     * `Collectors.mapping(Function<? super T, ? extends U> mapper, Collector<? super U, A, R> downstream)`
+    * `Collectors.groupingBy(...)`
     * `Collectors.collectingAndThen(Collector<T,A,R> downstream, Function<R,RR> finisher)` - please refer my other
     github project: [Collectors.collectingAndThen](https://github.com/mtumilowicz/java11-collectors-collectingAndThen)
+    * `Collectors.toMap(...)` - please refer my other github project: 
+    [Collectors.toMap](https://github.com/mtumilowicz/java11-collectors-tomap)
 * **mapFactory** - a supplier providing a new empty `Map` into which the 
 results will be inserted
 
