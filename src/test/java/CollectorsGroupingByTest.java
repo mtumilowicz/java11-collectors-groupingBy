@@ -24,12 +24,12 @@ public class CollectorsGroupingByTest {
                 .name("name")
                 .build();
 
-        Map<String, List<Person>> personByNameMap = Stream.of(p1, p2)
+        Map<String, List<Person>> namePersonMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getName));
 
-        assertThat(personByNameMap.size(), is(1));
-        assertThat(personByNameMap.get("name"), hasSize(2));
-        assertThat(personByNameMap.get("name"), containsInAnyOrder(p1, p2));
+        assertThat(namePersonMap.size(), is(1));
+        assertThat(namePersonMap.get("name"), hasSize(2));
+        assertThat(namePersonMap.get("name"), containsInAnyOrder(p1, p2));
     }
 
     @Test
@@ -43,12 +43,12 @@ public class CollectorsGroupingByTest {
                 .name("name")
                 .build();
 
-        Map<String, Set<Person>> personByNameMap = Stream.of(p1, p2)
+        Map<String, Set<Person>> namePersonMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getName, toSet()));
 
-        assertThat(personByNameMap.size(), is(1));
-        assertThat(personByNameMap.get("name"), hasSize(1));
-        assertThat(personByNameMap.get("name"), contains(p1));
+        assertThat(namePersonMap.size(), is(1));
+        assertThat(namePersonMap.get("name"), hasSize(1));
+        assertThat(namePersonMap.get("name"), contains(p1));
     }
 
     @Test
@@ -83,12 +83,21 @@ public class CollectorsGroupingByTest {
                 .id(2)
                 .name("name")
                 .build();
+        var p3 = Person.builder()
+                .id(3)
+                .name("name3")
+                .build();
 
-        TreeMap<String, Set<Person>> namePersonMap = Stream.of(p1, p2)
+        TreeMap<String, Set<Person>> namePersonMap = Stream.of(p1, p2, p3)
                 .collect(groupingBy(Person::getName, () -> new TreeMap<>(Comparator.reverseOrder()), toSet()));
 
-        assertThat(namePersonMap.size(), is(1));
-        assertThat(namePersonMap.get("name"), hasSize(2));
+        assertThat(namePersonMap.size(), is(2));
+        
+        assertThat(namePersonMap.firstEntry().getValue(), hasSize(1));
+        assertThat(namePersonMap.firstEntry().getValue(), containsInAnyOrder(p3));
+
+        assertThat(namePersonMap.lastEntry().getValue(), hasSize(2));
+        assertThat(namePersonMap.lastEntry().getValue(), containsInAnyOrder(p1, p2));
     }
 
     @Test
