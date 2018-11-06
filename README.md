@@ -134,4 +134,14 @@ public static <T, U, A, R>
                                                )
                                        )));
         ```
-    
+    * `Map<String, List<String>>` find all hobbies for jobTitle
+        ```
+        stream.collect(groupingBy(Person::getJobTitle,
+                                  Collectors.flatMapping(Person::getHobbiesAsStream, toList())));
+        ```
+        **Remark** - without flatMapping it would be impossible, because:
+        ```
+        Map<String, List<List<String>>> map = stream
+                .collect(groupingBy(Person::getJobTitle,
+                        Collectors.mapping(Person::getHobbies, toList())));        
+        ```

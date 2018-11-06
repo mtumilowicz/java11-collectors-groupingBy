@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -93,14 +94,14 @@ public class CollectorsGroupingByTest {
                 .collect(groupingBy(Person::getJobTitle, () -> new TreeMap<>(Comparator.reverseOrder()), toSet()));
 
         assertThat(jobTitlePersonMap.size(), is(2));
-        
+
         assertThat(jobTitlePersonMap.firstEntry().getValue(), hasSize(1));
         assertThat(jobTitlePersonMap.firstEntry().getValue(), containsInAnyOrder(p3));
 
         assertThat(jobTitlePersonMap.lastEntry().getValue(), hasSize(2));
         assertThat(jobTitlePersonMap.lastEntry().getValue(), containsInAnyOrder(p1, p2));
     }
-    
+
     @Test
     public void groupByJobTitle_countEveryGroup() {
         var p1 = Person.builder()
@@ -118,7 +119,7 @@ public class CollectorsGroupingByTest {
         assertThat(jobTitlePersonMap.size(), is(1));
         assertThat(jobTitlePersonMap.get("manager"), is(2L));
     }
-    
+
     @Test
     public void groupByJobTitle_groupByAge_countEveryGroup() {
         var p1 = Person.builder()
@@ -146,10 +147,10 @@ public class CollectorsGroupingByTest {
                 .collect(groupingBy(Person::getJobTitle, groupingBy(Person::getAge, counting())));
 
         assertThat(jobTitlePersonMap.size(), is(2));
-        
+
         assertThat(jobTitlePersonMap.get("manager").get(10), is(2L));
         assertThat(jobTitlePersonMap.get("manager").get(15), is(1L));
-        
+
         assertThat(jobTitlePersonMap.get("assistant").get(20), is(1L));
     }
 
@@ -223,10 +224,10 @@ public class CollectorsGroupingByTest {
                         filtering(person -> person.isOlderThan(30), toList())));
 
         assertThat(collect.size(), is(2));
-        
+
         assertThat(collect.get("manager"), hasSize(1));
         assertThat(collect.get("manager"), contains(p1));
-        
+
         assertThat(collect.get("developer"), is(empty()));
     }
 
@@ -253,7 +254,7 @@ public class CollectorsGroupingByTest {
                         )));
 
         assertThat(jobTitleMaxSalaryMap.size(), is(2));
-        
+
         assertThat(jobTitleMaxSalaryMap.get("manager").orElseThrow(), is(40));
         assertTrue(jobTitleMaxSalaryMap.get("developer").isEmpty());
     }
@@ -282,5 +283,42 @@ public class CollectorsGroupingByTest {
 
         assertThat(jobTitleMaxAgeMap.size(), is(1));
         assertThat(jobTitleMaxAgeMap.get("manager"), is(15));
+    }
+
+    @Test
+    public void findAllHobbiesForEveryGroupByJobTitle() {
+        var p1 = Person.builder()
+                .id(1)
+                .jobTitle("manager")
+                .hobbies(Arrays.asList("skiing", "football"))
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .jobTitle("manager")
+                .hobbies(Arrays.asList("music", "films"))
+                .build();
+        var p3 = Person.builder()
+                .id(2)
+                .jobTitle("developer")
+                .hobbies(Arrays.asList("RPG", "comics"))
+                .build();
+
+        Map<String, List<List<String>>> map = Stream.of(p1, p2, p3)
+                .collect(groupingBy(Person::getJobTitle,
+                        Collectors.mapping(Person::getHobbies, toList())));
+
+        Map<String, List<String>> jobTitleHobbiesMap = Stream.of(p1, p2, p3)
+                .collect(groupingBy(Person::getJobTitle,
+                        Collectors.flatMapping(Person::getHobbiesAsStream, toList())));
+
+        assertThat(jobTitleHobbiesMap.size(), is(2));
+
+        assertThat(jobTitleHobbiesMap.get("manager"), containsInAnyOrder(
+                "skiing",
+                "football",
+                "music",
+                "films"));
+
+        assertThat(jobTitleHobbiesMap.get("developer"), containsInAnyOrder("RPG", "comics"));
     }
 }
