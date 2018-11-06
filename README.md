@@ -88,10 +88,10 @@ public static <T, U, A, R>
     (if there is no max value -> put `-1`)
         ```
         stream.collect(groupingBy(Person::getName,
-                                mapping(Person::getAge,
-                                        collectingAndThen(
-                                                maxBy(Comparator.comparingInt(Integer::intValue)),
-                                                optional -> optional.orElse(-1)
-                                        )
-                                )));
+                                       mapping(Person::getAge,
+                                               collectingAndThen(
+                                                       maxBy(Comparator.comparingInt(Integer::intValue)),
+                                                       optional -> optional.orElse(-1)
+                                               )
+                                       )));
         ```
