@@ -40,7 +40,7 @@ public class CollectorsGroupingByTest {
                 .name("name")
                 .build();
         var p2 = Person.builder()
-                .id(1)
+                .id(2)
                 .name("name")
                 .build();
 
@@ -99,6 +99,24 @@ public class CollectorsGroupingByTest {
 
         assertThat(namePersonMap.lastEntry().getValue(), hasSize(2));
         assertThat(namePersonMap.lastEntry().getValue(), containsInAnyOrder(p1, p2));
+    }
+    
+    @Test
+    public void groupByName_countEveryGroup() {
+        var p1 = Person.builder()
+                .id(1)
+                .name("name")
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .name("name")
+                .build();
+
+        Map<String, Long> namePersonMap = Stream.of(p1, p2)
+                .collect(groupingBy(Person::getName, counting()));
+
+        assertThat(namePersonMap.size(), is(1));
+        assertThat(namePersonMap.get("name"), is(2L));
     }
 
     @Test
