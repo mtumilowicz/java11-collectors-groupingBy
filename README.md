@@ -104,6 +104,10 @@ public static <T, U, A, R>
         ```
         stream.collect(groupingBy(Person::getName, counting()));
         ```
+    * `Map<String, Map<Integer, Long>>`: group by name then group by age and count every group
+        ```
+        stream.collect(groupingBy(Person::getName, groupingBy(Person::getAge, counting())));
+        ```
     * `Map<String, Double>`: group by name and count average salary for every group
         ```
         stream.collect(groupingBy(Person::getName, averagingInt(Person::getSalary)));
