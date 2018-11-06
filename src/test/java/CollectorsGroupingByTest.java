@@ -25,12 +25,12 @@ public class CollectorsGroupingByTest {
                 .jobTitle("manager")
                 .build();
 
-        Map<String, List<Person>> namePersonMap = Stream.of(p1, p2)
+        Map<String, List<Person>> jobTitlePersonMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getJobTitle));
 
-        assertThat(namePersonMap.size(), is(1));
-        assertThat(namePersonMap.get("manager"), hasSize(2));
-        assertThat(namePersonMap.get("manager"), containsInAnyOrder(p1, p2));
+        assertThat(jobTitlePersonMap.size(), is(1));
+        assertThat(jobTitlePersonMap.get("manager"), hasSize(2));
+        assertThat(jobTitlePersonMap.get("manager"), containsInAnyOrder(p1, p2));
     }
 
     @Test
@@ -44,12 +44,12 @@ public class CollectorsGroupingByTest {
                 .jobTitle("manager")
                 .build();
 
-        Map<String, Set<Person>> namePersonMap = Stream.of(p1, p2)
+        Map<String, Set<Person>> jobTitlePersonMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getJobTitle, toSet()));
 
-        assertThat(namePersonMap.size(), is(1));
-        assertThat(namePersonMap.get("manager"), hasSize(1));
-        assertThat(namePersonMap.get("manager"), contains(p1));
+        assertThat(jobTitlePersonMap.size(), is(1));
+        assertThat(jobTitlePersonMap.get("manager"), hasSize(1));
+        assertThat(jobTitlePersonMap.get("manager"), contains(p1));
     }
 
     @Test
@@ -65,13 +65,13 @@ public class CollectorsGroupingByTest {
                 .age(35)
                 .build();
 
-        Map<String, List<Integer>> nameAgeMap = Stream.of(p1, p2)
+        Map<String, List<Integer>> jobTitleAgeMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getJobTitle,
                         mapping(Person::getAge, toList())));
 
-        assertThat(nameAgeMap.size(), is(1));
-        assertThat(nameAgeMap.get("manager"), hasSize(2));
-        assertThat(nameAgeMap.get("manager"), contains(20, 35));
+        assertThat(jobTitleAgeMap.size(), is(1));
+        assertThat(jobTitleAgeMap.get("manager"), hasSize(2));
+        assertThat(jobTitleAgeMap.get("manager"), contains(20, 35));
     }
 
     @Test
@@ -89,20 +89,20 @@ public class CollectorsGroupingByTest {
                 .jobTitle("president")
                 .build();
 
-        TreeMap<String, Set<Person>> namePersonMap = Stream.of(p1, p2, p3)
+        TreeMap<String, Set<Person>> jobTitlePersonMap = Stream.of(p1, p2, p3)
                 .collect(groupingBy(Person::getJobTitle, () -> new TreeMap<>(Comparator.reverseOrder()), toSet()));
 
-        assertThat(namePersonMap.size(), is(2));
+        assertThat(jobTitlePersonMap.size(), is(2));
         
-        assertThat(namePersonMap.firstEntry().getValue(), hasSize(1));
-        assertThat(namePersonMap.firstEntry().getValue(), containsInAnyOrder(p3));
+        assertThat(jobTitlePersonMap.firstEntry().getValue(), hasSize(1));
+        assertThat(jobTitlePersonMap.firstEntry().getValue(), containsInAnyOrder(p3));
 
-        assertThat(namePersonMap.lastEntry().getValue(), hasSize(2));
-        assertThat(namePersonMap.lastEntry().getValue(), containsInAnyOrder(p1, p2));
+        assertThat(jobTitlePersonMap.lastEntry().getValue(), hasSize(2));
+        assertThat(jobTitlePersonMap.lastEntry().getValue(), containsInAnyOrder(p1, p2));
     }
     
     @Test
-    public void groupByName_countEveryGroup() {
+    public void groupByJobTitle_countEveryGroup() {
         var p1 = Person.builder()
                 .id(1)
                 .jobTitle("manager")
@@ -112,15 +112,15 @@ public class CollectorsGroupingByTest {
                 .jobTitle("manager")
                 .build();
 
-        Map<String, Long> namePersonMap = Stream.of(p1, p2)
+        Map<String, Long> jobTitlePersonMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getJobTitle, counting()));
 
-        assertThat(namePersonMap.size(), is(1));
-        assertThat(namePersonMap.get("manager"), is(2L));
+        assertThat(jobTitlePersonMap.size(), is(1));
+        assertThat(jobTitlePersonMap.get("manager"), is(2L));
     }
     
     @Test
-    public void groupByName_groupByAge_countEveryGroup() {
+    public void groupByJobTitle_groupByAge_countEveryGroup() {
         var p1 = Person.builder()
                 .id(1)
                 .jobTitle("manager")
@@ -142,19 +142,19 @@ public class CollectorsGroupingByTest {
                 .age(20)
                 .build();
 
-        Map<String, Map<Integer, Long>> namePersonMap = Stream.of(p1, p2, p3, p4)
+        Map<String, Map<Integer, Long>> jobTitlePersonMap = Stream.of(p1, p2, p3, p4)
                 .collect(groupingBy(Person::getJobTitle, groupingBy(Person::getAge, counting())));
 
-        assertThat(namePersonMap.size(), is(2));
+        assertThat(jobTitlePersonMap.size(), is(2));
         
-        assertThat(namePersonMap.get("manager").get(10), is(2L));
-        assertThat(namePersonMap.get("manager").get(15), is(1L));
+        assertThat(jobTitlePersonMap.get("manager").get(10), is(2L));
+        assertThat(jobTitlePersonMap.get("manager").get(15), is(1L));
         
-        assertThat(namePersonMap.get("assistant").get(20), is(1L));
+        assertThat(jobTitlePersonMap.get("assistant").get(20), is(1L));
     }
 
     @Test
-    public void groupByName_averageSalary() {
+    public void groupByJobTitle_averageSalary() {
         var p1 = Person.builder()
                 .id(1)
                 .jobTitle("manager")
@@ -166,11 +166,11 @@ public class CollectorsGroupingByTest {
                 .salary(20)
                 .build();
 
-        Map<String, Double> nameAverageSalaryMap = Stream.of(p1, p2)
+        Map<String, Double> jobTitleAverageSalaryMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getJobTitle, averagingInt(Person::getSalary)));
 
-        assertThat(nameAverageSalaryMap.size(), is(1));
-        assertThat(nameAverageSalaryMap.get("manager"), is(15d));
+        assertThat(jobTitleAverageSalaryMap.size(), is(1));
+        assertThat(jobTitleAverageSalaryMap.get("manager"), is(15d));
     }
 
     @Test
@@ -191,13 +191,13 @@ public class CollectorsGroupingByTest {
                 .age(20)
                 .build();
 
-        Map<String, List<Person>> nameAgeMap = Stream.of(p1, p2, p3)
+        Map<String, List<Person>> jobTitleAgeMap = Stream.of(p1, p2, p3)
                 .filter(person -> person.isOlderThan(30))
                 .collect(groupingBy(Person::getJobTitle));
 
-        assertThat(nameAgeMap.size(), is(1));
-        assertThat(nameAgeMap.get("manager"), hasSize(1));
-        assertThat(nameAgeMap.get("manager"), contains(p1));
+        assertThat(jobTitleAgeMap.size(), is(1));
+        assertThat(jobTitleAgeMap.get("manager"), hasSize(1));
+        assertThat(jobTitleAgeMap.get("manager"), contains(p1));
     }
 
     @Test
@@ -247,15 +247,15 @@ public class CollectorsGroupingByTest {
                 .jobTitle("developer")
                 .build();
 
-        Map<String, Optional<Integer>> nameMaxSalaryMap = Stream.of(p1, p2, p3)
+        Map<String, Optional<Integer>> jobTitleMaxSalaryMap = Stream.of(p1, p2, p3)
                 .collect(groupingBy(Person::getJobTitle,
                         mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue))
                         )));
 
-        assertThat(nameMaxSalaryMap.size(), is(2));
+        assertThat(jobTitleMaxSalaryMap.size(), is(2));
         
-        assertThat(nameMaxSalaryMap.get("manager").orElseThrow(), is(40));
-        assertTrue(nameMaxSalaryMap.get("developer").isEmpty());
+        assertThat(jobTitleMaxSalaryMap.get("manager").orElseThrow(), is(40));
+        assertTrue(jobTitleMaxSalaryMap.get("developer").isEmpty());
     }
 
     @Test
@@ -271,7 +271,7 @@ public class CollectorsGroupingByTest {
                 .age(15)
                 .build();
 
-        Map<String, Integer> nameMaxAgeMap = Stream.of(p1, p2)
+        Map<String, Integer> jobTitleMaxAgeMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getJobTitle,
                         mapping(Person::getAge,
                                 collectingAndThen(
@@ -280,7 +280,7 @@ public class CollectorsGroupingByTest {
                                 )
                         )));
 
-        assertThat(nameMaxAgeMap.size(), is(1));
-        assertThat(nameMaxAgeMap.get("manager"), is(15));
+        assertThat(jobTitleMaxAgeMap.size(), is(1));
+        assertThat(jobTitleMaxAgeMap.get("manager"), is(15));
     }
 }
