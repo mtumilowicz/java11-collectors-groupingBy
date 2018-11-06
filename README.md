@@ -37,6 +37,7 @@ for example:
     * `Collectors.toSet()`
     * `Collectors.mapping(Function<? super T, ? extends U> mapper, Collector<? super U, A, R> downstream)`
     * `Collectors.groupingBy(...)`
+    * `Collectors.reducing(...)`
     * `Collectors.collectingAndThen(Collector<T,A,R> downstream, Function<R,RR> finisher)` - please refer my other
     github project: [Collectors.collectingAndThen](https://github.com/mtumilowicz/java11-collectors-collectingAndThen)
     * `Collectors.toMap(...)` - please refer my other github project: 
@@ -144,4 +145,10 @@ public static <T, U, A, R>
         Map<String, List<List<String>>> map = stream
                 .collect(groupingBy(Person::getJobTitle,
                         Collectors.mapping(Person::getHobbies, toList())));        
+        ```
+    * `Map<String, Optional<String>>`: find all hobbies for jobTitle and concat them separated by comma
+        ```
+        stream.collect(groupingBy(Person::getJobTitle,
+                                Collectors.flatMapping(Person::getHobbiesAsStream,
+                                        reducing((x, y) -> x + "," + y))));
         ```
