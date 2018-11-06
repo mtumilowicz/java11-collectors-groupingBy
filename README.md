@@ -49,6 +49,7 @@ public static <T, U, A, R>
         int id;
         String name;
         int age;
+        Integer salary;
         
         boolean isOlderThan(int value) {
             return age > value;
@@ -79,9 +80,9 @@ public static <T, U, A, R>
         stream.collect(groupingBy(Person::getName, filtering(person -> person.isOlderThan(30), toList())));
         ```
         _Remark_: difference to filter on stream
-    * `Map<String, Optional<Integer>>`: group persons by name and find max age for every group
+    * `Map<String, Optional<Integer>>`: group persons by name and find max salary for every group
         ```
-        stream.collect(groupingBy(Person::getName, mapping(Person::getAge, maxBy(Comparator.comparingInt(Integer::intValue)))));
+        stream.collect(groupingBy(Person::getName, mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue)))));
         ```
     * `Map<String, Optional<Integer>>`: group persons by name and find max age for every group 
     (if there is no max value -> put `-1`)
