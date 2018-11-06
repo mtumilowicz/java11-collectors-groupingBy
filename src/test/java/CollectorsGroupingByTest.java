@@ -182,7 +182,7 @@ public class CollectorsGroupingByTest {
 
         assertThat(nameMaxSalaryMap.size(), is(2));
         
-        assertThat(nameMaxSalaryMap.get("name").get(), is(40));
+        assertThat(nameMaxSalaryMap.get("name").orElseThrow(), is(40));
         assertTrue(nameMaxSalaryMap.get("name3").isEmpty());
     }
 
@@ -191,13 +191,15 @@ public class CollectorsGroupingByTest {
         var p1 = Person.builder()
                 .id(1)
                 .name("name")
+                .age(10)
                 .build();
         var p2 = Person.builder()
                 .id(2)
                 .name("name")
+                .age(15)
                 .build();
 
-        Map<String, Integer> collect = Stream.of(p1, p2)
+        Map<String, Integer> nameMaxAgeMap = Stream.of(p1, p2)
                 .collect(groupingBy(Person::getName,
                         mapping(Person::getAge,
                                 collectingAndThen(
@@ -206,6 +208,7 @@ public class CollectorsGroupingByTest {
                                 )
                         )));
 
-        assertThat(collect.size(), is(1));
+        assertThat(nameMaxAgeMap.size(), is(1));
+        assertThat(nameMaxAgeMap.get("name"), is(15));
     }
 }
