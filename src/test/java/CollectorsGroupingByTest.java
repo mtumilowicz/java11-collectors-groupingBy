@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mtumilowicz on 2018-11-05.
@@ -118,12 +119,13 @@ public class CollectorsGroupingByTest {
                 .age(20)
                 .build();
 
-        Map<String, List<Person>> collect = Stream.of(p1, p2, p3)
+        Map<String, List<Person>> nameAgeMap = Stream.of(p1, p2, p3)
                 .filter(person -> person.isOlderThan(30))
                 .collect(groupingBy(Person::getName));
 
-        assertThat(collect.size(), is(1));
-        assertThat(collect.get("name"), hasSize(1));
+        assertThat(nameAgeMap.size(), is(1));
+        assertThat(nameAgeMap.get("name"), hasSize(1));
+        assertThat(nameAgeMap.get("name"), contains(p1));
     }
 
     @Test
@@ -139,7 +141,7 @@ public class CollectorsGroupingByTest {
                 .age(20)
                 .build();
         var p3 = Person.builder()
-                .id(2)
+                .id(3)
                 .name("name3")
                 .age(20)
                 .build();
@@ -149,27 +151,39 @@ public class CollectorsGroupingByTest {
                         filtering(person -> person.isOlderThan(30), toList())));
 
         assertThat(collect.size(), is(2));
+        
         assertThat(collect.get("name"), hasSize(1));
+        assertThat(collect.get("name"), contains(p1));
+        
         assertThat(collect.get("name3"), is(empty()));
     }
 
     @Test
-    public void find_max_age_for_every_group() {
+    public void find_max_salary_for_every_group() {
         var p1 = Person.builder()
                 .id(1)
                 .name("name")
+                .salary(40)
                 .build();
         var p2 = Person.builder()
                 .id(2)
                 .name("name")
+                .salary(30)
+                .build();
+        var p3 = Person.builder()
+                .id(3)
+                .name("name3")
                 .build();
 
-        Map<String, Optional<Integer>> collect = Stream.of(p1, p2)
+        Map<String, Optional<Integer>> nameMaxSalaryMap = Stream.of(p1, p2, p3)
                 .collect(groupingBy(Person::getName,
-                        mapping(Person::getAge, maxBy(Comparator.comparingInt(Integer::intValue))
+                        mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue))
                         )));
 
-        assertThat(collect.size(), is(1));
+        assertThat(nameMaxSalaryMap.size(), is(2));
+        
+        assertThat(nameMaxSalaryMap.get("name").get(), is(40));
+        assertTrue(nameMaxSalaryMap.get("name3").isEmpty());
     }
 
     @Test

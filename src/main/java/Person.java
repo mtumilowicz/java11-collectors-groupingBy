@@ -10,6 +10,7 @@ class Person {
     int id;
     String name;
     int age;
+    Integer salary;
     
     boolean isOlderThan(int value) {
         return age > value;
