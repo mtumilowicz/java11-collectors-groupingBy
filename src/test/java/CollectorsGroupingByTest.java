@@ -40,7 +40,7 @@ public class CollectorsGroupingByTest {
                 .name("name")
                 .build();
         var p2 = Person.builder()
-                .id(2)
+                .id(1)
                 .name("name")
                 .build();
 
@@ -117,6 +117,26 @@ public class CollectorsGroupingByTest {
 
         assertThat(namePersonMap.size(), is(1));
         assertThat(namePersonMap.get("name"), is(2L));
+    }
+
+    @Test
+    public void groupByName_averageSalary() {
+        var p1 = Person.builder()
+                .id(1)
+                .name("name")
+                .salary(10)
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .name("name")
+                .salary(20)
+                .build();
+
+        Map<String, Double> nameAverageSalaryMap = Stream.of(p1, p2)
+                .collect(groupingBy(Person::getName, averagingInt(Person::getSalary)));
+
+        assertThat(nameAverageSalaryMap.size(), is(1));
+        assertThat(nameAverageSalaryMap.get("name"), is(15d));
     }
 
     @Test
