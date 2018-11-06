@@ -25,6 +25,13 @@ public static <T, K, D, A, M extends Map<K, D>>
                Supplier<M> mapFactory,
                Collector<? super T, A, D> downstream)
 ```
+where:
+* **classifier** - a classifier function mapping input elements to keys
+* **downstream** - a `Collector` implementing the downstream reduction,
+for example:
+    * 
+* **mapFactory** - a supplier providing a new empty `Map` into which the 
+results will be inserted
 
 ## java 9
 ```
@@ -95,3 +102,4 @@ public static <T, U, A, R>
                                                )
                                        )));
         ```
+    
