@@ -317,4 +317,34 @@ public class CollectorsGroupingByTest {
 
         assertThat(jobTitleHobbiesMap.get("developer"), containsInAnyOrder("RPG", "comics"));
     }
+
+    @Test
+    public void findAllHobbiesForEveryGroupByJobTitle_concatThemToOneStringSeparatedByCommas() {
+        var p1 = Person.builder()
+                .id(1)
+                .jobTitle("manager")
+                .hobbies(Arrays.asList("skiing", "football"))
+                .build();
+        var p2 = Person.builder()
+                .id(2)
+                .jobTitle("manager")
+                .hobbies(Arrays.asList("music", "films"))
+                .build();
+        var p3 = Person.builder()
+                .id(2)
+                .jobTitle("developer")
+                .hobbies(Arrays.asList("RPG", "comics"))
+                .build();
+
+        Map<String, Optional<String>> jobTitleHobbiesMap = Stream.of(p1, p2, p3)
+                .collect(groupingBy(Person::getJobTitle,
+                        Collectors.flatMapping(Person::getHobbiesAsStream,
+                                reducing((x, y) -> x + "," + y))));
+
+        assertThat(jobTitleHobbiesMap.size(), is(2));
+
+        assertThat(jobTitleHobbiesMap.get("manager").orElseThrow(), is("skiing,football,music,films"));
+
+        assertThat(jobTitleHobbiesMap.get("developer").orElseThrow(), is("RPG,comics"));
+    }
 }
