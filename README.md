@@ -134,7 +134,7 @@ public static <T, U, A, R>
                                                )
                                        )));
         ```
-    * `Map<String, List<String>>` find all hobbies for jobTitle
+    * `Map<String, List<String>>`: find all hobbies for jobTitle
         ```
         stream.collect(groupingBy(Person::getJobTitle,
                                   Collectors.flatMapping(Person::getHobbiesAsStream, toList())));
