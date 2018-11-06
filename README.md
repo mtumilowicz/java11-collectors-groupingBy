@@ -95,7 +95,8 @@ public static <T, U, A, R>
         ```
         stream.collect(groupingBy(Person::getJobTitle, () -> new TreeMap<>(Comparator.reverseOrder()), toSet()));        
         ```
-    * `Map<String, List<Person>>`: persons grouped by jobTitle and filtered by age > 30
+    * `Map<String, List<Person>>`: persons grouped by jobTitle and 
+    filtered by age > 30
         ```
         stream.collect(groupingBy(Person::getJobTitle, filtering(person -> person.isOlderThan(30), toList())));
         ```
@@ -103,19 +104,21 @@ public static <T, U, A, R>
         * if we `filter` stream before collection we **lose irretrievably** 
         entries
         * if we `filter` stream after collection we have keys with empty values
-    * `Map<String, Long>`: group by jobTitle and count every group
+    * `Map<String, Long>`: group by jobTitle and count elements in each group
         ```
         stream.collect(groupingBy(Person::getJobTitle, counting()));
         ```
-    * `Map<String, Map<Integer, Long>>`: group by jobTitle then group by age and count every group
+    * `Map<String, Map<Integer, Long>>`: group by jobTitle then group by age and 
+    count elements in each group
         ```
         stream.collect(groupingBy(Person::getJobTitle, groupingBy(Person::getAge, counting())));
         ```
-    * `Map<String, Double>`: group by jobTitle and count average salary for every group
+    * `Map<String, Double>`: group by jobTitle and count average salary for each group
         ```
         stream.collect(groupingBy(Person::getJobTitle, averagingInt(Person::getSalary)));
         ```
-    * `Map<String, Optional<Integer>>`: group persons by jobTitle and find max salary for every group
+    * `Map<String, Optional<Integer>>`: group persons by jobTitle and find max salary 
+    for each group
         ```
         stream.collect(groupingBy(Person::getJobTitle, mapping(Person::getSalary, maxBy(Comparator.comparingInt(Integer::intValue)))));
         ```
@@ -124,7 +127,7 @@ public static <T, U, A, R>
         Map<String, Optional<Person>> collect = stream
                 .collect(groupingBy(Person::getJobTitle, maxBy(Comparator.comparingInt(Person::getSalary))));        
         ```
-    * `Map<String, Integer>`: group persons by jobTitle and find max age for every group 
+    * `Map<String, Integer>`: group persons by jobTitle and find max age for each group 
     (if there is no max value -> put `-1`)
         ```
         stream.collect(groupingBy(Person::getJobTitle,
