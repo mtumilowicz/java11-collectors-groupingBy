@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/java11-collectors-groupingBy.svg?branch=master)](https://travis-ci.com/mtumilowicz/java11-collectors-groupingBy)
+
 # java11-collectors-groupingBy
 Summary of `Collectors.groupingBy` API.
 
