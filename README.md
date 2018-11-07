@@ -38,6 +38,8 @@ for example:
     * `Collectors.mapping(Function<? super T, ? extends U> mapper, Collector<? super U, A, R> downstream)`
     * `Collectors.groupingBy(...)`
     * `Collectors.reducing(...)`
+    * `Collectors.joining(...)` - please refer my other github project: 
+    [Collectors.joining](https://github.com/mtumilowicz/java11-collectors-joining)
     * `Collectors.collectingAndThen(Collector<T,A,R> downstream, Function<R,RR> finisher)` - please refer my other
     github project: [Collectors.collectingAndThen](https://github.com/mtumilowicz/java11-collectors-collectingAndThen)
     * `Collectors.toMap(...)` - please refer my other github project: 
